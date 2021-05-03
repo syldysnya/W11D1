@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     JSON.parse(localStorage.state) : {};
   const store = configureStore(preloadedState);
 
-  store.dispatch(fetchTodos());
-  window.fetchTodos = fetchTodos;
-  const root = document.getElementById('content');
+  // store.dispatch(fetchTodos());
+  // window.fetchTodos = fetchTodos;
+  const root = document.getElementById('root');
   ReactDOM.render(<Root store={store} />, root);
 });

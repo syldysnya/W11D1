@@ -24,8 +24,10 @@ export const todoError = error => ({
   error,
 });
 
-export const fetchTodos = () => dispatch => {
-  return TodoApiUtil.fetchTodos().then(todos => {
-    return dispatch(receiveTodos(todos))
-  })
+export const fetchTodos = () => (dispatch) => {
+  debugger
+  return TodoApiUtil.fetchTodos()
+    .then(todos => {
+      return dispatch(receiveTodos(todos))
+    })
 }

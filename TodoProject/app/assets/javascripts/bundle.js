@@ -175,6 +175,7 @@ var todoError = function todoError(error) {
 };
 var fetchTodos = function fetchTodos() {
   return function (dispatch) {
+    debugger;
     return _util_todo_api_util__WEBPACK_IMPORTED_MODULE_0__["fetchTodos"]().then(function (todos) {
       return dispatch(receiveTodos(todos));
     });
@@ -823,6 +824,12 @@ var TodoList = /*#__PURE__*/function (_React$Component) {
   }
 
   _createClass(TodoList, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      debugger;
+      this.props.fetchTodos();
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this$props = this.props,
@@ -861,8 +868,10 @@ var TodoList = /*#__PURE__*/function (_React$Component) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _todo_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./todo_list */ "./frontend/components/todo_list/todo_list.jsx");
-/* harmony import */ var _actions_todo_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/todo_actions */ "./frontend/actions/todo_actions.js");
-/* harmony import */ var _reducers_selectors__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../reducers/selectors */ "./frontend/reducers/selectors.js");
+/* harmony import */ var _util_todo_api_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../util/todo_api_util */ "./frontend/util/todo_api_util.js");
+/* harmony import */ var _actions_todo_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/todo_actions */ "./frontend/actions/todo_actions.js");
+/* harmony import */ var _reducers_selectors__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../reducers/selectors */ "./frontend/reducers/selectors.js");
+
 
  // Actions
 
@@ -871,7 +880,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    todos: Object(_reducers_selectors__WEBPACK_IMPORTED_MODULE_3__["allTodos"])(state),
+    todos: Object(_reducers_selectors__WEBPACK_IMPORTED_MODULE_4__["allTodos"])(state),
     state: state
   };
 };
@@ -879,7 +888,10 @@ var mapStateToProps = function mapStateToProps(state) {
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     receiveTodo: function receiveTodo(todo) {
-      return dispatch(Object(_actions_todo_actions__WEBPACK_IMPORTED_MODULE_2__["receiveTodo"])(todo));
+      return dispatch(Object(_actions_todo_actions__WEBPACK_IMPORTED_MODULE_3__["receiveTodo"])(todo));
+    },
+    fetchTodos: function fetchTodos(todos) {
+      return dispatch(Object(_util_todo_api_util__WEBPACK_IMPORTED_MODULE_2__["fetchTodos"])(todos));
     }
   };
 };
@@ -1001,20 +1013,37 @@ var TodoListItem = /*#__PURE__*/function (_React$Component) {
 /*!**************************************!*\
   !*** ./frontend/middleware/thunk.js ***!
   \**************************************/
-/*! exports provided: thunk */
+/*! exports provided: thunk, logAction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "thunk", function() { return thunk; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logAction", function() { return logAction; });
 var thunk = function thunk(store) {
   return function (next) {
     return function (action) {
+      debugger;
+
       if (typeof action === 'function') {
+        debugger;
         return action(store.dispatch);
       } else {
         return next(action);
       }
+    };
+  };
+};
+var logAction = function logAction(store) {
+  console.log("I'm in the top level middleware function");
+  console.log(store);
+  return function (next) {
+    console.log("I'm in the function where next is the arg");
+    console.log(next);
+    return function (action) {
+      console.log("I'm in the innermost function");
+      console.log(action);
+      return next(action);
     };
   };
 };
@@ -1224,7 +1253,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var configureStore = function configureStore() {
   var preloadedState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var store = Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(_reducers_root_reducer__WEBPACK_IMPORTED_MODULE_1__["default"], preloadedState, Object(redux__WEBPACK_IMPORTED_MODULE_0__["applyMiddleware"])(_middleware_thunk__WEBPACK_IMPORTED_MODULE_2__["thunk"], redux_logger__WEBPACK_IMPORTED_MODULE_3___default.a));
+  var store = Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(_reducers_root_reducer__WEBPACK_IMPORTED_MODULE_1__["default"], preloadedState, Object(redux__WEBPACK_IMPORTED_MODULE_0__["applyMiddleware"])(_middleware_thunk__WEBPACK_IMPORTED_MODULE_2__["logAction"], _middleware_thunk__WEBPACK_IMPORTED_MODULE_2__["thunk"]));
   store.subscribe(function () {
     localStorage.state = JSON.stringify(store.getState());
   });
@@ -1258,10 +1287,10 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener('DOMContentLoaded', function () {
   var preloadedState = localStorage.state ? JSON.parse(localStorage.state) : {};
-  var store = Object(_store_store__WEBPACK_IMPORTED_MODULE_2__["default"])(preloadedState);
-  store.dispatch(Object(_util_todo_api_util__WEBPACK_IMPORTED_MODULE_3__["fetchTodos"])());
-  window.fetchTodos = _util_todo_api_util__WEBPACK_IMPORTED_MODULE_3__["fetchTodos"];
-  var root = document.getElementById('content');
+  var store = Object(_store_store__WEBPACK_IMPORTED_MODULE_2__["default"])(preloadedState); // store.dispatch(fetchTodos());
+  // window.fetchTodos = fetchTodos;
+
+  var root = document.getElementById('root');
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_root__WEBPACK_IMPORTED_MODULE_4__["default"], {
     store: store
   }), root);
