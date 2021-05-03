@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import configureStore from './store/store';
-import { fetchTodos } from './util/todo_api_util'
 import Root from './components/root';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -9,8 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     JSON.parse(localStorage.state) : {};
   const store = configureStore(preloadedState);
 
-  // store.dispatch(fetchTodos());
-  // window.fetchTodos = fetchTodos;
   const root = document.getElementById('root');
   ReactDOM.render(<Root store={store} />, root);
 });

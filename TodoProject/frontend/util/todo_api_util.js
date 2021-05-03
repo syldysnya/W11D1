@@ -5,4 +5,12 @@ export const fetchTodos = () => {
   })
 }
 
-window.fetchTodos = fetchTodos;
+export const createTodo = (todo) => {
+  return $.ajax({
+    method: "POST",
+    url: '/api/todos',
+    data: todo
+  })
+}
+
+// window.fetchTodos = fetchTodos;
